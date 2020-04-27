@@ -1,6 +1,6 @@
 import { getReactInstance } from '@kot-shrodingera-team/config/reactUtils';
 import { awaiter, getElement } from '@kot-shrodingera-team/config/util';
-import { getStakeCount } from './callbacks/getStakeInfo';
+import { getStakeCount, checkLogin } from './callbacks/getStakeInfo';
 import {
   betslipSelector,
   betslipClearButtonSelector,
@@ -130,6 +130,13 @@ const showStake = async (): Promise<void> => {
     5000,
     100
   );
+
+  worker.Islogin = checkLogin();
+  worker.JSLogined();
+  if (!worker.Islogin) {
+    couponOpenFailed('Ошибка открытия купона: Нет авторизации');
+    return;
+  }
 
   if (checkStakeOpened()) {
     HWL('Уже открыт нужный купон');
