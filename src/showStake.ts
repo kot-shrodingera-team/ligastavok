@@ -7,6 +7,7 @@ import {
   reactRootSelector,
   betslipBetLimitSelector,
 } from './selectors';
+import { updateBalance } from './authorize';
 
 interface Bet {
   id: string;
@@ -137,6 +138,7 @@ const showStake = async (): Promise<void> => {
     couponOpenFailed('Ошибка открытия купона: Нет авторизации');
     return;
   }
+  updateBalance();
 
   if (checkStakeOpened()) {
     HWL('Уже открыт нужный купон');

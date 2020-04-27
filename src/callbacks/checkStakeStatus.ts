@@ -1,4 +1,5 @@
 import * as selectors from '../selectors';
+import { updateBalance } from '../authorize';
 
 const HWL = worker.Helper.WriteLine;
 
@@ -18,6 +19,7 @@ const checkStakeStatus = (): boolean => {
     return false;
   }
   HWL('Пари принято');
+  updateBalance();
   // worker.Helper.LoadUrl(worker.EventUrl);
   return true;
 };

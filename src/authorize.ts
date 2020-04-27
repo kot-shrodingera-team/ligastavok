@@ -5,7 +5,7 @@ import * as selectors from './selectors';
 
 const HWL = worker.Helper.WriteLine;
 
-const updateBalance = (): void => worker.JSBalanceChange(getBalance());
+export const updateBalance = (): void => worker.JSBalanceChange(getBalance());
 
 const authorize = async (): Promise<void> => {
   HWL('Проверка авторизации');
