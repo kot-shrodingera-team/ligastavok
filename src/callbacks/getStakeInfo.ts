@@ -3,10 +3,10 @@ import * as selectors from '../selectors';
 const HWL = worker.Helper.WriteLine;
 
 export const checkLogin = (): boolean => {
-  return (
-    [document.queryClassTemplateSelector(selectors.authPanelClass)] !==
-    undefined
+  const [authPanel] = document.queryClassTemplateSelector(
+    selectors.authPanelClass
   );
+  return authPanel !== undefined;
 };
 
 export const getStakeCount = (): number => {

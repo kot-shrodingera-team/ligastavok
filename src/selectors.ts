@@ -15,6 +15,7 @@ export const authFormButtonSelector = '[class*=auth-panel__button_sign-in]';
 export const authFormSelector = 'form#auth';
 export const authFormTabSelector = '[class^=tab-switcher__name]';
 export const authFormActiveTabSelector = '[class*=tab-switcher__name_active]'; // активный это НЕ выбранный !!!
+export const authFormActiveClass = 'tab-switcher__name_active-6469c2'; // активный это НЕ выбранный !!!
 export const authFormEmailInputSelector = 'input[name="email"]';
 export const authFormPhoneInputSelector = 'input[name="mobilePhone"]';
 export const authFormPasswordInputSelector = 'input[name="password"]';

@@ -52,8 +52,8 @@ const authorize = async (): Promise<void> => {
       );
       return;
     }
-    const phoneTabActive = [...phoneTab.classList].some((className) =>
-      className.startsWith(selectors.authFormActiveTabSelector)
+    const phoneTabActive = [...phoneTab.classList].includes(
+      selectors.authFormActiveClass
     );
     if (!phoneTabActive) {
       HWL('Уже переключено на авторизацию по телефону');
@@ -98,8 +98,13 @@ const authorize = async (): Promise<void> => {
     HWL('Ошибка авторизации: Не найдена кнопка входа');
     return;
   }
-  if (submitButton.disabled) {
-    HWL('Ошибка авторизации: Кнопка входа недоступна');
+  const submitButtonAvailable = await awaiter(
+    () => !submitButton.disabled,
+    10000,
+    100
+  );
+  if (!submitButtonAvailable) {
+    HWL('Ошибка авторизации: Кнопка входа так не стала доступной');
     return;
   }
   submitButton.click();
@@ -159,7 +164,7 @@ const authorize = async (): Promise<void> => {
       HWL('Ошибка авторизации: Не удалось авторизоваться');
       return;
     }
-    HWL('Ошибка авторизации: Не удалось авторизоваться');
+    HWL(`Ошибка авторизации: Не удалось авторизоваться. Попытка: ${i + 2}`);
 
     await sleep(authTryInterval);
   }
