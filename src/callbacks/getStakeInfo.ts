@@ -87,18 +87,13 @@ export const getSumFromCoupon = (): number => {
     );
     return 0;
   }
-  const currentSum = betInput.value.replace(',', '.');
-  if (currentSum === '') {
-    return NaN;
-  }
-  const limitRegex = /^\d+(?:\.\d+)?$/;
-  if (!limitRegex.test(currentSum)) {
+  const currentSum = Number(betInput.value.replace(',', '.').replace(/ /g, ''));
+  if (!Number.isNaN(currentSum)) {
     HWL(
-      `Ошибка получения текущей суммы ставки в купоне: Некорректный формат - '${currentSum}'`
+      `Ошибка получения текущей суммы ставки в купоне: Некорректный формат - '${betInput.value}'`
     );
-    return NaN;
   }
-  return parseFloat(currentSum);
+  return currentSum;
 };
 
 export const checkStakeEnebled = (): boolean => {
