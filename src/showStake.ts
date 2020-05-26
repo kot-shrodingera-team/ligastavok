@@ -1,6 +1,10 @@
 import { getReactInstance } from '@kot-shrodingera-team/config/reactUtils';
 import { awaiter, getElement } from '@kot-shrodingera-team/config/util';
-import { getStakeCount, checkLogin } from './callbacks/getStakeInfo';
+import {
+  getStakeCount,
+  checkLogin,
+  getParameterFromCoupon,
+} from './callbacks/getStakeInfo';
 import {
   betslipSelector,
   betslipClearButtonSelector,
@@ -243,6 +247,10 @@ const showStake = async (): Promise<void> => {
     return;
   }
   HWL('Максимум появился');
+  const { param } = JSON.parse(worker.ForkObj) as WorkerBetObject;
+  if (typeof param !== 'undefined') {
+    await awaiter(() => getParameterFromCoupon() !== -6666);
+  }
   worker.JSStop();
 };
 
