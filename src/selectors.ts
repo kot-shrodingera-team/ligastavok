@@ -10,6 +10,7 @@ export const betslipBetInputClass = 'betslip__input';
 export const betslipServiceMessageClass = 'service-message__text';
 export const betslitCoefficientClass = 'bet__coeff-value';
 export const betslipOutcomeTitleClass = 'bet__label_outcome-title';
+export const betslipOutcomeTitleSelector = '.bet__label_outcome-title-5368ea';
 export const betslipSubmitButtonClass = 'bar__submit';
 export const authFormButtonSelector = '[class*=auth-panel__button_sign-in]';
 export const authFormSelector = 'form#auth';

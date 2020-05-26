@@ -135,8 +135,8 @@ export const getCoefficientFromCoupon = (): number => {
 };
 
 export const getParameterFromCoupon = (): number => {
-  const [outcomeElement] = document.queryClassTemplateSelector(
-    selectors.betslipOutcomeTitleClass
+  const outcomeElement = document.querySelector(
+    selectors.betslipOutcomeTitleSelector
   );
   if (!outcomeElement) {
     HWL('Ошибка получения параметра: Не найдена роспись ставки');
