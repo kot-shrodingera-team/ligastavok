@@ -88,7 +88,7 @@ export const getSumFromCoupon = (): number => {
     return 0;
   }
   const currentSum = Number(betInput.value.replace(',', '.').replace(/ /g, ''));
-  if (!Number.isNaN(currentSum)) {
+  if (Number.isNaN(currentSum)) {
     HWL(
       `Ошибка получения текущей суммы ставки в купоне: Некорректный формат - '${betInput.value}'`
     );
