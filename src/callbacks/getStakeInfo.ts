@@ -140,7 +140,7 @@ export const getParameterFromCoupon = (): number => {
   );
   if (!outcomeElement) {
     HWL('Ошибка получения параметра: Не найдена роспись ставки');
-    return NaN;
+    return -9999;
   }
   const outcome = outcomeElement.textContent.trim().replace(',', '.');
   if (outcome === 'К1' || outcome === 'К2') {
