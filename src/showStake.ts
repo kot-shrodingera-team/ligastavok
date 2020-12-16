@@ -250,7 +250,16 @@ const showStake = async (): Promise<void> => {
   HWL('Максимум появился');
   const { param } = JSON.parse(worker.ForkObj) as WorkerBetObject;
   if (typeof param !== 'undefined') {
-    await awaiter(() => getParameterFromCoupon() !== -6666);
+    worker.Helper.WriteLine('Ждём появления параметра');
+    const parameterLoaded = await awaiter(
+      () => getParameterFromCoupon() !== -6666
+    );
+    if (!parameterLoaded) {
+      worker.Helper.WriteLine('Параметр так и не появился');
+      worker.JSFail();
+      return;
+    }
+    worker.Helper.WriteLine('Параметр появился');
   }
   worker.JSStop();
 };
