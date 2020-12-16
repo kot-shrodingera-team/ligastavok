@@ -145,17 +145,17 @@ export const getParameterFromCoupon = (): number => {
   const outcome = outcomeElement.textContent.trim().replace(',', '.');
   if (outcome === 'К1' || outcome === 'К2') {
     // Фора 0
-    HWL('Параметр ставки - 0 (Фора)');
+    // HWL('Параметр ставки - 0 (Фора)');
     return 0;
   }
   const parameterRegex = /^.*\(([-+]?\d+(?:\.\d+)?)\)$/;
   const matches = outcome.match(parameterRegex);
   if (matches) {
     const parameter = parseFloat(matches[1]);
-    HWL(`Параметр ставки - ${parameter}`);
+    // HWL(`Параметр ставки - ${parameter}`);
     return parameter;
   }
-  HWL(`Ставка без параметра (${outcome})`);
+  // HWL(`Ставка без параметра (${outcome})`);
   return -6666;
 };
 
