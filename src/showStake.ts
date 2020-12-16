@@ -58,6 +58,7 @@ interface BetObject {
   eventTeam: string;
   topicId: string;
   marketTitle: string;
+  adValue: string;
 }
 
 // interface EventData {
@@ -208,7 +209,7 @@ const showStake = async (): Promise<void> => {
   dispatch({
     type: '@@betslip/ADD_BET',
     bet: {
-      base: '0',
+      base: betObject.adValue,
       comment: betObject.eventComment,
       eventId: betObject.eventId,
       eventType: betObject.eventType,
@@ -218,7 +219,7 @@ const showStake = async (): Promise<void> => {
       id: betObject.id,
       locked: betObject.locked,
       marketId: betObject.marketId,
-      marketType: betObject.marketType,
+      // marketType: betObject.marketType,
       name: betObject.title,
       odd: betObject.value,
       outcomeKey: betObject.outcomeKey,
