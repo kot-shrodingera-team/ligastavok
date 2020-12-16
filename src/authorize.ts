@@ -34,6 +34,8 @@ const authorize = async (): Promise<void> => {
     return;
   }
 
+  await sleep(1000);
+
   if (!worker.Login.includes('@')) {
     HWL('Переключаем на авторизацию по телефону');
     const authFormTabs = [
