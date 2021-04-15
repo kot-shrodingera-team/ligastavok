@@ -61,21 +61,23 @@ const authorize = async (): Promise<void> => {
       HWL('Уже переключено на авторизацию по телефону');
     } else {
       phoneTab.click();
-      const loginInput = document.querySelector(
-        selectors.authFormPhoneInputSelector
-      );
-      if (!loginInput) {
-        HWL('Ошибка авторизации: Не найдено поле ввода телефона');
-        return;
-      }
-      const phoneRegex = /^(?:\+|\+7)?(\d{10})$/;
-      const match = worker.Login.match(phoneRegex);
-      if (!match) {
-        HWL(`Ошибка авторизации: Неверный формат телефона - ${worker.Login}`);
-        return;
-      }
-      setReactInputValue(loginInput, match[1]);
     }
+    const loginInput = document.querySelector(
+      selectors.authFormPhoneInputSelector
+    );
+    if (!loginInput) {
+      HWL('Ошибка авторизации: Не найдено поле ввода телефона');
+      return;
+    }
+    const phoneRegex = /^(?:\+?[78]?)?9(\d{9})$/;
+    const match = worker.Login.match(phoneRegex);
+    if (!match) {
+      HWL(`Ошибка авторизации: Неверный формат телефона - ${worker.Login}`);
+      return;
+    }
+    const phone =
+      match[1][1] === '9' ? `${match[1][0]}9${match[1].slice(1)}` : match[1];
+    setReactInputValue(loginInput, phone);
   } else {
     // Нет проверки вкладки, при переоткрытии всегда открывается вход по email
     const loginInput = document.querySelector(
