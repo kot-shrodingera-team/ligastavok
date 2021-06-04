@@ -1,53 +1,46 @@
-import './queryTemplateSelectors';
-// import { pipeHwlToConsole, domLoaded } from './util';
-import { pipeHwlToConsole, domLoaded } from '@kot-shrodingera-team/config/util';
-import { getStakeInfo } from './callbacks/getStakeInfo';
-import setStakeSum from './callbacks/setStakeSum';
-import doStake from './callbacks/doStake';
-import checkCuponLoading from './callbacks/checkCouponLoading';
-import checkStakeStatus from './callbacks/checkStakeStatus';
-import authorize from './authorize';
-import showStake from './showStake';
+import '@kot-shrodingera-team/worker-declaration/workerCheck';
+import { log } from '@kot-shrodingera-team/germes-utils';
+import getStakeInfo from './worker_callbacks/getStakeInfo';
+import setStakeSum from './worker_callbacks/setStakeSum';
+import doStake from './worker_callbacks/doStake';
+import checkCouponLoading from './worker_callbacks/checkCouponLoading';
+import checkStakeStatus from './worker_callbacks/checkStakeStatus';
+import afterSuccesfulStake from './worker_callbacks/afterSuccesfulStake';
+import fastLoad from './fastLoad';
+import initialize from './initialization';
+import showStake from './show_stake';
+import { clearGermesData } from './bookmakerApi';
 
-pipeHwlToConsole();
-// import afterSuccesfulStake from './afterSuccesfulStake';
-const HWL = worker.Helper.WriteLine;
-
-const FastLoad = async (): Promise<void> => {
-  // Не знаю, что это за проверка
-  // if (document.querySelector('[class*="application__failed-connect"]')) {
-  //   worker.Helper.LoadUrl(worker.EventUrl);
-  //   return;
-  // }
-  HWL('Быстрая загрузка');
-  await showStake();
+window.alert = (message: string): void => {
+  log(`Перехваченный алерт: ${message}`);
 };
 
 worker.SetCallBacks(
-  console.log,
+  log,
   getStakeInfo,
   setStakeSum,
   doStake,
-  checkCuponLoading,
-  checkStakeStatus
+  checkCouponLoading,
+  checkStakeStatus,
+  afterSuccesfulStake
 );
-worker.SetFastCallback(FastLoad);
+
+worker.SetFastCallback(fastLoad);
+clearGermesData();
 
 (async (): Promise<void> => {
-  HWL('Начали');
-  await domLoaded();
   if (
-    document
-      .querySelector('body')
-      .textContent.includes('ERR_CONNECTION_TIMED_OUT')
+    worker.GetSessionData(`${window.germesData.bookmakerName}.ShowStake`) ===
+      '1' &&
+    worker.IsShowStake
   ) {
-    HWL('На Лиге Ставок необходимо сменить прокси');
-    worker.Helper.SendInformedMessage(
-      'На Лиге Ставок необходимо сменить прокси'
-    );
-  } else if (!worker.IsShowStake) {
-    authorize();
-  } else {
+    log('Загрузка страницы с открытием купона', 'steelblue');
     showStake();
+  } else if (!worker.IsShowStake) {
+    worker.SetSessionData(`${window.germesData.bookmakerName}.ShowStake`, '0');
+    log('Загрузка страницы с авторизацией', 'steelblue');
+    initialize();
+  } else {
+    log('Загрузка страницы без открытия купона', 'steelblue');
   }
 })();
