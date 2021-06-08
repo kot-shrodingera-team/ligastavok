@@ -58,8 +58,16 @@ const asyncCheck = async () => {
         errorMessages.forEach((error) => {
           const errorText = text(error);
           log(errorText, 'tomato');
-          if (!/^Пари не приняты$/i.test(errorText)) {
-            worker.Helper.SendInformedMessage(errorText);
+          if (/^Пари не приняты$/i.test(errorText)) {
+            // Пари не приняты
+          } else if (/^Смена коэффициента у исхода/i.test(errorText)) {
+            // Смена коэффициента у исхода 2 события Болт А. - Броуди Л.. Актуальное значение коэффициента 1.27.
+          } else if (/^Пари на live событие .* временно не заключаются.$/i.test(errorText)) {
+            // Пари на live событие Болт А. - Броуди Л. временно не заключаются.
+          } else if (/^Пари на на исход .* не принимаются.$/i.test(errorText)) {
+            // Пари на исход бол события № ВКН - Ферас ду Андараи не принимаются.
+          } else {
+            // worker.Helper.SendInformedMessage(errorText);
             sendTGBotMessage(
               '1786981726:AAE35XkwJRsuReonfh1X2b8E7k9X4vknC_s',
               126302051,
