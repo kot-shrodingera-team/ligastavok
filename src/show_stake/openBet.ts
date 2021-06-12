@@ -1,5 +1,6 @@
 import {
   awaiter,
+  getElement,
   log,
   repeatingOpenBet,
   text,
@@ -82,17 +83,18 @@ const openBet = async (): Promise<void> => {
   }
   log('Максимум появился', 'cadetblue', true);
 
-  const { param } = JSON.parse(worker.ForkObj);
-  if (typeof param !== 'undefined') {
-    log('Ждём появления параметра', 'cadetblue', true);
-    const parameterLoaded = await awaiter(() => {
-      return getParameter() !== -6666;
-    });
-    if (!parameterLoaded) {
-      throw new JsFailError('Параметр не появился');
-    }
-    log('Параметр появился', 'cadetblue', true);
-  }
+  await getElement('[class*="bet__info"]:not([class*="bet__info-top"]) [class*="bet__wrapper"]');
+  // const { param } = JSON.parse(worker.ForkObj);
+  // if (typeof param !== 'undefined') {
+  //   log('Ждём появления параметра', 'cadetblue', true);
+  //   const parameterLoaded = await awaiter(() => {
+  //     return getParameter() !== -6666;
+  //   });
+  //   if (!parameterLoaded) {
+  //     throw new JsFailError('Параметр не появился');
+  //   }
+  //   log('Параметр появился', 'cadetblue', true);
+  // }
 
   const eventNameSelector = '[class*="bet__teams-"]';
   const marketNameSelector =
