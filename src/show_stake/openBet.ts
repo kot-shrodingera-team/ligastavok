@@ -96,9 +96,9 @@ const openBet = async (): Promise<void> => {
 
   const eventNameSelector = '[class*="bet__teams-"]';
   const marketNameSelector =
-    '[class*="bet__label_outcome-title-"] > :nth-child(1)';
+    '[class*="bet__info-top"] [class*="bet__label_outcome-title-"]';
   const betNameSelector =
-    '[class*="bet__label_outcome-title-"] > :nth-child(2)';
+    '[class*="bet__info"]:not([class*="bet__info-top"]) [class*="bet__wrapper"]';
 
   const eventNameElement = document.querySelector(eventNameSelector);
   const marketNameElement = document.querySelector(marketNameSelector);
