@@ -38,6 +38,10 @@ clearGermesData();
     showStake();
   } else if (!worker.IsShowStake) {
     worker.SetSessionData(`${window.germesData.bookmakerName}.ShowStake`, '0');
+    worker.SetSessionData(
+      `${window.germesData.bookmakerName}.TransitionToEventPage`,
+      '0'
+    );
     log('Загрузка страницы с авторизацией', 'steelblue');
     initialize();
   } else {

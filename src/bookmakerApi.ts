@@ -70,15 +70,21 @@ export const clearGermesData = (): void => {
     bookmakerName: 'Liga Stavok',
     minimumStake: undefined,
     maximumStake: undefined,
+    doStakeTime: undefined,
     betProcessingStep: undefined,
     betProcessingAdditionalInfo: undefined,
-    doStakeTime: undefined,
     betProcessingTimeout: 50000,
     stakeDisabled: undefined,
     stopBetProcessing: () => {
       window.germesData.betProcessingStep = 'error';
       window.germesData.stakeDisabled = true;
     },
+    updateManualDataIntervalId: undefined,
+    stopUpdateManualData: undefined,
+    manualMaximumStake: undefined,
+    manualCoefficient: undefined,
+    manualParameter: undefined,
+    manualStakeEnabled: undefined,
   };
 };
 

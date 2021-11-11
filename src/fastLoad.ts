@@ -13,6 +13,10 @@ const fastLoad = async (): Promise<void> => {
     window.location.reload();
     return;
   }
+  worker.SetSessionData(
+    `${window.germesData.bookmakerName}.TransitionToEventPage`,
+    '0'
+  );
   log(`Быстрая загрузка (${version})`, 'steelblue');
   showStake();
 };

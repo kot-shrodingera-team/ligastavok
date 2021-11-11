@@ -4,11 +4,14 @@ import {
   getElement,
   awaiter,
   getRemainingTimeout,
-  checkCouponLoadingError,
-  checkCouponLoadingSuccess,
   text,
   sendTGBotMessage,
 } from '@kot-shrodingera-team/germes-utils';
+import {
+  betProcessingCompltete,
+  betProcessingError,
+  sendErrorMessage,
+} from '@kot-shrodingera-team/germes-utils/betProcessing';
 import { StateMachine } from '@kot-shrodingera-team/germes-utils/stateMachine';
 
 const loaderSelector = '.service-message__icon_loading';
@@ -53,7 +56,7 @@ const asyncCheck = async () => {
     error: {
       entry: async () => {
         log('Появилась ошибка', 'steelblue');
-        window.germesData.betProcessingAdditionalInfo = null;
+        window.germesData.betProcessingAdditionalInfo = undefined;
         const errorMessages = [...document.querySelectorAll(errorSelector)];
         errorMessages.forEach((error) => {
           const errorText = text(error);
@@ -77,13 +80,12 @@ const asyncCheck = async () => {
             );
           }
         });
-        checkCouponLoadingError({});
+        betProcessingError(machine);
       },
-      final: true,
     },
     betPlaced: {
       entry: async () => {
-        window.germesData.betProcessingAdditionalInfo = null;
+        window.germesData.betProcessingAdditionalInfo = undefined;
         const serviceMessageArrow = document.querySelector<HTMLElement>(
           '[class*="service-message__arrow-"]'
         );
@@ -104,19 +106,17 @@ const asyncCheck = async () => {
             );
           }
         }
-        checkCouponLoadingSuccess('Ставка принята');
+        betProcessingCompltete(machine);
       },
-      final: true,
     },
     timeout: {
       entry: async () => {
-        window.germesData.betProcessingAdditionalInfo = null;
-        checkCouponLoadingError({
-          botMessage: 'Не дождались результата ставки',
-          informMessage: 'Не дождались результата ставки',
-        });
+        window.germesData.betProcessingAdditionalInfo = undefined;
+        const message = 'Не дождались результата ставки';
+        log(message, 'crimson');
+        sendErrorMessage(message);
+        betProcessingError(machine);
       },
-      final: true,
     },
   });
 
@@ -125,6 +125,7 @@ const asyncCheck = async () => {
 
 const checkCouponLoading = checkCouponLoadingGenerator({
   asyncCheck,
+  disableLog: false,
 });
 
 export default checkCouponLoading;

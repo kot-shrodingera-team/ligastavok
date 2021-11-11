@@ -1,5 +1,5 @@
 import {
-  awaiter,
+  // awaiter,
   getElement,
   log,
   repeatingOpenBet,
@@ -7,17 +7,25 @@ import {
 } from '@kot-shrodingera-team/germes-utils';
 import { JsFailError } from '@kot-shrodingera-team/germes-utils/errors';
 import { maximumStakeReady } from '../stake_info/getMaximumStake';
-import getParameter from '../stake_info/getParameter';
+// import getParameter from '../stake_info/getParameter';
 import getStakeCount from '../stake_info/getStakeCount';
 import clearCoupon from './clearCoupon';
-import findOutcome from './helpers/findOutcome';
-import getDispatch from './helpers/getDispatch';
+import findOutcome from '../helpers/findOutcome';
+import getDispatch from '../helpers/getDispatch';
 
 const openBet = async (): Promise<void> => {
+  /* ======================================================================== */
+  /*                              Очистка купона                              */
+  /* ======================================================================== */
+
   const couponCleared = await clearCoupon();
   if (!couponCleared) {
     throw new JsFailError('Не удалось очистить купон');
   }
+
+  /* ======================================================================== */
+  /*                               Поиск ставки                               */
+  /* ======================================================================== */
 
   const dispatch = getDispatch();
   if (!dispatch) {
@@ -49,7 +57,10 @@ const openBet = async (): Promise<void> => {
     throw new JsFailError('Ставка не найдена');
   }
 
-  // Открытие ставки, проверка, что ставка попала в купон
+  /* ======================================================================== */
+  /*           Открытие ставки, проверка, что ставка попала в купон           */
+  /* ======================================================================== */
+  
   const openingAction = async () => {
     dispatch({
       type: '@@betslip/ADD_BET',
@@ -75,13 +86,21 @@ const openBet = async (): Promise<void> => {
       },
     });
   };
-  await repeatingOpenBet(openingAction, getStakeCount, 5, 1000, 50);
+  await repeatingOpenBet(openingAction, getStakeCount, 1, 1000, 50);
+
+  /* ======================================================================== */
+  /*                            Проверка максимума                            */
+  /* ======================================================================== */
 
   const maximumLoaded = await maximumStakeReady();
   if (!maximumLoaded) {
     throw new JsFailError('Максимум не появился');
   }
   log('Максимум появился', 'cadetblue', true);
+
+  /* ======================================================================== */
+  /*                                     ?                                    */
+  /* ======================================================================== */
 
   await getElement('[class*="bet__info"]:not([class*="bet__info-top"]) [class*="bet__wrapper"]');
   // const { param } = JSON.parse(worker.ForkObj);
@@ -95,6 +114,10 @@ const openBet = async (): Promise<void> => {
   //   }
   //   log('Параметр появился', 'cadetblue', true);
   // }
+
+  /* ======================================================================== */
+  /*                    Вывод информации об открытой ставке                   */
+  /* ======================================================================== */
 
   const eventNameSelector = '[class*="bet__teams-"]';
   const marketNameSelector =

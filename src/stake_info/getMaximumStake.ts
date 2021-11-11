@@ -2,12 +2,13 @@ import getStakeInfoValueGenerator, {
   stakeInfoValueReadyGenerator,
 } from '@kot-shrodingera-team/germes-generators/stake_info/getStakeInfoValue';
 import { StakeInfoValueOptions } from '@kot-shrodingera-team/germes-generators/stake_info/types';
+// import getBalance from './getBalance';
 
 export const maximumStakeSelector = '[class*="bet__limit-"]:nth-child(2)';
 
 const maximumStakeOptions: StakeInfoValueOptions = {
   name: 'maximumStake',
-  // fixedValue: () => 0,
+  // fixedValue: () => getBalance(),
   valueFromText: {
     text: {
       // getText: () => '',
