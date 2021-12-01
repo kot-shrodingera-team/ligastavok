@@ -25,6 +25,15 @@ declare global {
           };
         };
       };
+      return: {
+        pendingProps: {
+          value: {
+            store: {
+              dispatch: (data: Record<string, unknown>) => unknown;
+            };
+          };
+        };
+      };
     };
   }
 

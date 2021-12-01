@@ -10,6 +10,10 @@ import { authElementSelector } from '../stake_info/checkAuth';
 import { updateBalance, balanceReady } from '../stake_info/getBalance';
 // import afterSuccesfulLogin from './afterSuccesfulLogin';
 
+// const preCheck = async (): Promise<boolean> => {
+//   return true;
+// };
+
 const preInputCheck = async (): Promise<boolean> => {
   const authTabsSelector = '[class*=tab-switcher__name-]';
   const activeTabClassRegex = /^tab-switcher__name_active-/i;
@@ -94,6 +98,7 @@ const beforeSubmitCheck = async (): Promise<boolean> => {
 // };
 
 const authorize = authorizeGenerator({
+  // preCheck,
   openForm: {
     selector: '#header-sign-in',
     openedSelector: 'form#auth',

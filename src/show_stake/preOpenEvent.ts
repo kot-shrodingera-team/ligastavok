@@ -1,7 +1,7 @@
 import {
   checkBookerHost,
   checkCurrency,
-  getElement,
+  // getElement,
   log,
 } from '@kot-shrodingera-team/germes-utils';
 import {
@@ -45,19 +45,19 @@ const preOpenEvent = async (): Promise<void> => {
   const siteCurrency = getSiteCurrency();
   checkCurrency(siteCurrency);
 
-  /* ======================================================================== */
-  /*                               Проверка Live                              */
-  /* ======================================================================== */
+  // /* ======================================================================== */
+  // /*                               Проверка Live                              */
+  // /* ======================================================================== */
 
-  if (!/^\/bets\/live/i.test(window.location.pathname)) {
-    log('Открыт не Live', 'crimson');
-    const liveButton = await getElement<HTMLElement>('[href="/bets/live"]');
-    if (!liveButton) {
-      throw new JsFailError('Не найдена кнопка перехода на Live');
-    }
-    log('Переходим на Live', 'orange');
-    liveButton.click();
-  }
+  // if (!/^\/bets\/live/i.test(window.location.pathname)) {
+  //   log('Открыт не Live', 'crimson');
+  //   const liveButton = await getElement<HTMLElement>('[href="/bets/live"]');
+  //   if (!liveButton) {
+  //     throw new JsFailError('Не найдена кнопка перехода на Live');
+  //   }
+  //   log('Переходим на Live', 'orange');
+  //   liveButton.click();
+  // }
 };
 
 export default preOpenEvent;

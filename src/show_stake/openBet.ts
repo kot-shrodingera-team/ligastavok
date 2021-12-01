@@ -1,6 +1,7 @@
 import {
   // awaiter,
   getElement,
+  getWorkerParameter,
   log,
   repeatingOpenBet,
   text,
@@ -10,8 +11,8 @@ import { maximumStakeReady } from '../stake_info/getMaximumStake';
 // import getParameter from '../stake_info/getParameter';
 import getStakeCount from '../stake_info/getStakeCount';
 import clearCoupon from './clearCoupon';
-import findOutcome from '../helpers/findOutcome';
-import getDispatch from '../helpers/getDispatch';
+import getCoefficient from '../stake_info/getCoefficient';
+import findBet from '../helpers/findBet';
 
 const openBet = async (): Promise<void> => {
   /* ======================================================================== */
@@ -27,64 +28,17 @@ const openBet = async (): Promise<void> => {
   /*                               Поиск ставки                               */
   /* ======================================================================== */
 
-  const dispatch = getDispatch();
-  if (!dispatch) {
-    throw new JsFailError('Не удалось найти диспетчер');
-  }
-  const eventLine = await fetch(
-    'https://lds-api.ligastavok.ru/rest/events/v1/actionLine',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ id: worker.EventId }),
-    }
-  );
-  if (!eventLine) {
-    throw new JsFailError('Не удалось получить информацию о линии');
-  }
-
-  const eventLineJson = await eventLine.json();
-  if (!eventLineJson || !eventLineJson.result) {
-    throw new JsFailError('Не удалось обработать информацию о линии');
-  }
-
-  const eventData = eventLineJson.result;
-
-  const betObject = findOutcome(eventData);
-  if (!betObject) {
+  const bet = await findBet();
+  if (!bet) {
     throw new JsFailError('Ставка не найдена');
   }
 
   /* ======================================================================== */
   /*           Открытие ставки, проверка, что ставка попала в купон           */
   /* ======================================================================== */
-  
+
   const openingAction = async () => {
-    dispatch({
-      type: '@@betslip/ADD_BET',
-      bet: {
-        base: betObject.adValue,
-        comment: betObject.eventComment,
-        eventId: betObject.eventId,
-        eventType: betObject.eventType,
-        factorId: betObject.facId,
-        gameId: betObject.eventGameId,
-        group: betObject.partTitle,
-        id: betObject.id,
-        locked: betObject.locked,
-        marketId: betObject.marketId,
-        // marketType: betObject.marketType,
-        name: betObject.title,
-        odd: betObject.value,
-        outcomeKey: betObject.outcomeKey,
-        partName: betObject.partName,
-        teams: betObject.eventTeam,
-        topicId: betObject.topicId,
-        type: betObject.marketTitle,
-      },
-    });
+    bet.click();
   };
   await repeatingOpenBet(openingAction, getStakeCount, 1, 1000, 50);
 
@@ -102,7 +56,9 @@ const openBet = async (): Promise<void> => {
   /*                                     ?                                    */
   /* ======================================================================== */
 
-  await getElement('[class*="bet__info"]:not([class*="bet__info-top"]) [class*="bet__wrapper"]');
+  await getElement(
+    '[class*="bet__info"]:not([class*="bet__info-top"]) [class*="bet__wrapper"]'
+  );
   // const { param } = JSON.parse(worker.ForkObj);
   // if (typeof param !== 'undefined') {
   //   log('Ждём появления параметра', 'cadetblue', true);
@@ -144,6 +100,26 @@ const openBet = async (): Promise<void> => {
   const betName = text(betNameElement);
 
   log(`Открыта ставка\n${eventName}\n${marketName}\n${betName}`, 'steelblue');
+
+  /* ======================================================================== */
+  /*                           Проверка коэффициента                          */
+  /* ======================================================================== */
+
+  const coefficientDropCheck = getWorkerParameter('coefficientDropCheck');
+  if (coefficientDropCheck) {
+    const currentCoefficient = getCoefficient();
+    const { coefficient: forkCoefficient } = JSON.parse(worker.ForkObj);
+    if (!forkCoefficient) {
+      throw new JsFailError('Не удалось получить коэффициент из вилки');
+    }
+    log(
+      `Коэффициент: ${forkCoefficient} => ${currentCoefficient}`,
+      'steelblue'
+    );
+    if (currentCoefficient < forkCoefficient) {
+      throw new JsFailError('Коэффициент упал');
+    }
+  }
 };
 
 export default openBet;
